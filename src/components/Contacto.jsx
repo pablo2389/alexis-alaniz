@@ -14,11 +14,11 @@ export default function Contacto() {
   const [nombre, setNombre] = useState('');
   const [mensaje, setMensaje] = useState('Estoy interesado en las clases de boxeo');
 
-  // Función para crear el link de WhatsApp con mensaje codificado
-  const generarUrlWhatsApp = () => {
+  const handleEnviarWhatsApp = () => {
     const texto = `Hola Alexis! Soy ${nombre || 'un interesado'}, ${mensaje}`;
     const encodedTexto = encodeURIComponent(texto);
-    return `https://wa.me/${whatsappNumber}?text=${encodedTexto}`;
+    const url = `https://wa.me/${whatsappNumber}?text=${encodedTexto}`;
+    window.open(url, '_blank');
   };
 
   return (
@@ -65,9 +65,7 @@ export default function Contacto() {
             variant="contained"
             color="success"
             disabled={!nombre.trim()}
-            href={generarUrlWhatsApp()}
-            target="_blank"
-            rel="noopener noreferrer"
+            onClick={handleEnviarWhatsApp}
             sx={{ fontWeight: 'bold' }}
           >
             Enviar mensaje por WhatsApp

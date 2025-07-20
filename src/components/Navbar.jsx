@@ -3,116 +3,123 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
-  Box,
   IconButton,
   Drawer,
   List,
   ListItem,
+  ListItemIcon,
   ListItemText,
-  CssBaseline,
+  Box
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import InfoIcon from '@mui/icons-material/Info';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import ContactMailIcon from '@mui/icons-material/ContactMail';
 import { Link } from 'react-router-dom';
 
-function Navbar() {
-  const [drawerOpen, setDrawerOpen] = useState(false);
+export default function Navbar() {
+  const [open, setOpen] = useState(false);
 
-  const toggleDrawer = (open) => () => setDrawerOpen(open);
+  const toggleDrawer = (state) => () => {
+    setOpen(state);
+  };
 
   const navLinks = [
-    { title: 'Sobre mí', path: '/sobremi' },
-    { title: 'Beneficios', path: '/beneficios' },
-    { title: 'Contacto', path: '/contacto' },
+    { text: 'Inicio', to: '/', icon: <HomeIcon /> },
+    { text: 'Sobre Mí', to: '/sobremi', icon: <InfoIcon /> },
+    { text: 'Beneficios', to: '/beneficios', icon: <FitnessCenterIcon /> },
+    { text: 'Contacto', to: '/contacto', icon: <ContactMailIcon /> },
   ];
 
   return (
     <>
-      <CssBaseline />
-      <AppBar position="static" sx={{ backgroundColor: '#121212', py: 1 }}>
-        <Toolbar sx={{ flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-          <Typography
-            variant="h6"
+      <AppBar position="fixed" sx={{ backgroundColor: '#1c1c1c' }}>
+        <Toolbar>
+          {/* Logo + Título */}
+          <Box
+            component={Link}
+            to="/"
             sx={{
-              fontWeight: 'bold',
-              color: '#c0c0c0',
-              textShadow: '0 0 8px #fbc02d, 0 0 12px #fbc02d', // brillo dorado/neón
+              flexGrow: 1,
+              display: 'flex',
+              alignItems: 'center',
+              textDecoration: 'none',
             }}
           >
-            Aprende boxeo con Alexis "La Máquina" Alaniz
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: '#fbc02d',
-              mt: 0.5,
-            }}
-          >
-            Federación Mendocina de Box - Ciudad de Mendoza
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{
-              color: '#fbc02d',
-            }}
-          >
-            Horarios: Lunes a Viernes por la mañana
-          </Typography>
-
-          {/* Menú para pantallas grandes */}
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, mt: 1 }}>
-            {navLinks.map(({ title, path }) => (
-              <Button
-                key={title}
-                component={Link}
-                to={path}
-                sx={{
-                  fontWeight: 'bold',
-                  mx: 1,
-                  color: '#e0e0e0',
-                  '&:hover': {
-                    color: '#fbc02d',
-                    backgroundColor: 'transparent',
-                  },
-                }}
-              >
-                {title}
-              </Button>
-            ))}
+            <img
+              src="/images/logo.jpg"
+              alt="Logo"
+              style={{
+                height: '60px',
+                marginRight: 10,
+                borderRadius: '50%',
+              }}
+            />
+            <Typography
+              variant="h6"
+              sx={{
+                color: '#fbc02d',
+                fontWeight: 'bold',
+                textAlign: 'center',
+                flexGrow: 1,            // Que el texto ocupe todo el espacio restante
+                fontSize: { xs: '1rem', md: '1.5rem' },
+              }}
+            >
+              ALEXIS "La Máquina" ALANIZ
+            </Typography>
           </Box>
 
-          {/* Icono menú hamburguesa para móviles */}
+          {/* Botón menú (mobile) */}
           <IconButton
-            color="secondary"
-            edge="start"
+            edge="end"
+            color="inherit"
+            aria-label="menu"
             onClick={toggleDrawer(true)}
-            sx={{ display: { md: 'none' }, color: '#c0c0c0', position: 'absolute', right: 16 }}
           >
             <MenuIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      {/* Drawer para menú móvil */}
-      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+      {/* Drawer */}
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={toggleDrawer(false)}
+        transitionDuration={{ enter: 900, exit: 300 }}
+      >
         <Box
-          sx={{ width: 250, backgroundColor: '#121212', height: '100%' }}
+          sx={{
+            width: 250,
+            backgroundColor: '#121212',
+            height: '100%',
+          }}
           role="presentation"
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
         >
           <List>
-            {navLinks.map(({ title, path }) => (
-              <ListItem button component={Link} to={path} key={title} sx={{ color: '#e0e0e0' }}>
-                <ListItemText
-                  primary={title}
-                  primaryTypographyProps={{
-                    sx: {
-                      fontWeight: 'bold',
-                      color: '#e0e0e0',
-                    },
-                  }}
-                />
+            {navLinks.map((link) => (
+              <ListItem
+                button
+                component={Link}
+                to={link.to}
+                key={link.text}
+                sx={{
+                  '& .MuiListItemText-primary': {
+                    color: '#fbc02d',
+                    fontWeight: 'bold',
+                  },
+                  '&:hover': {
+                    backgroundColor: '#333',
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ color: '#fbc02d' }}>
+                  {link.icon}
+                </ListItemIcon>
+                <ListItemText primary={link.text} />
               </ListItem>
             ))}
           </List>
@@ -121,5 +128,3 @@ function Navbar() {
     </>
   );
 }
-
-export default Navbar;
